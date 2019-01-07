@@ -33,7 +33,7 @@ steps:
       imageName: '$(ACR.ImageName)'
       command: build
 
-  - task: Docker@1
+- task: Docker@1
     displayName: 'Push an image'
     inputs:
       azureSubscriptionEndpoint: '$(Azure.ServiceConnectionId)'
