@@ -25,5 +25,5 @@ steps:
 - task: Docker@1
   displayName: 'Build an image'
   inputs:
-    containerregistrytype: 'Container Registry'
-    dockerRegistryEndpoint: 'springBootAzurePiplineDemoi'
+    azureSubscriptionEndpoint: 'spring-boot-azure-pipline-demo'
+    azureContainerRegistry: springbootazurepiplinedemo.azurecr.io
