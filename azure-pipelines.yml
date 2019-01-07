@@ -9,13 +9,13 @@ variables:
   ACR.ImageName: '$(ACR.Name):master'
   ACR.FullName: '$(ACR.Name).azurecr.io'
 
-pool:
-  vmImage: 'Ubuntu-16.04'
-
 jobs:
 
 - job: BuildImage
   displayName: Build
+
+  pool:
+    vmImage: 'Ubuntu-16.04'
 
   steps:
   - task: Gradle@2
@@ -32,17 +32,17 @@ jobs:
       tasks: 'build'
 
   - task: Docker@1
-      displayName: 'Build an image'
-      inputs:
-        azureSubscriptionEndpoint: '$(Azure.ServiceConnectionId)'
-        azureContainerRegistry: '$(ACR.FullName)'
-        imageName: '$(ACR.ImageName)'
-        command: build
+    displayName: 'Build an image'
+    inputs:
+      azureSubscriptionEndpoint: '$(Azure.ServiceConnectionId)'
+      azureContainerRegistry: '$(ACR.FullName)'
+      imageName: '$(ACR.ImageName)'
+      command: build
 
   - task: Docker@1
-      displayName: 'Bush an image'
-      inputs:
-        azureSubscriptionEndpoint: '$(Azure.ServiceConnectionId)'
-        azureContainerRegistry: '$(ACR.FullName)'
-        imageName: '$(ACR.ImageName)'
-        command: push
+    displayName: 'Push an image'
+    inputs:
+      azureSubscriptionEndpoint: '$(Azure.ServiceConnectionId)'
+      azureContainerRegistry: '$(ACR.FullName)'
+      imageName: '$(ACR.ImageName)'
+      command: push
