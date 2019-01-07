@@ -12,31 +12,37 @@ variables:
 pool:
   vmImage: 'Ubuntu-16.04'
 
-steps:
-- task: Gradle@2
-  inputs:
-    workingDirectory: ''
-    gradleWrapperFile: 'gradlew'
-    gradleOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.11'
-    jdkArchitectureOption: 'x64'
-    publishJUnitResults: false
-    testResultsFiles: '**/TEST-*.xml'
-    tasks: 'build'
+jobs:
 
-- task: Docker@1
-    displayName: 'build an image'
-    inputs:
-      azureSubscriptionEndpoint: '$(Azure.ServiceConnectionId)'
-      azureContainerRegistry: '$(ACR.FullName)'
-      imageName: '$(ACR.ImageName)'
-      command: build
+- job:
+  displayName: Build
 
-- task: Docker@1
-    displayName: 'push an image'
+  steps:
+  - task: Gradle@2
+    displayName: 'Build module'
     inputs:
-      azureSubscriptionEndpoint: '$(Azure.ServiceConnectionId)'
-      azureContainerRegistry: '$(ACR.FullName)'
-      imageName: '$(ACR.ImageName)'
-      command: push
+      workingDirectory: ''
+      gradleWrapperFile: 'gradlew'
+      gradleOptions: '-Xmx3072m'
+      javaHomeOption: 'JDKVersion'
+      jdkVersionOption: '1.11'
+      jdkArchitectureOption: 'x64'
+      publishJUnitResults: false
+      testResultsFiles: '**/TEST-*.xml'
+      tasks: 'build'
+
+  - task: Docker@1
+      displayName: 'Build an image'
+      inputs:
+        azureSubscriptionEndpoint: '$(Azure.ServiceConnectionId)'
+        azureContainerRegistry: '$(ACR.FullName)'
+        imageName: '$(ACR.ImageName)'
+        command: build
+
+  - task: Docker@1
+      displayName: 'Bush an image'
+      inputs:
+        azureSubscriptionEndpoint: '$(Azure.ServiceConnectionId)'
+        azureContainerRegistry: '$(ACR.FullName)'
+        imageName: '$(ACR.ImageName)'
+        command: push
