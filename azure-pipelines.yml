@@ -6,6 +6,14 @@
 trigger:
 - master
 
+variables:
+  Azure.ServiceConnectionId: 'spring-boot-azure-pipline-demo'
+  ACR.Name: 'springBootAzurePiplineDemo'
+
+  ACR.RepositoryName: '$(ACR.Name)'
+  ACR.ImageName: '$(ACR.Name):$(Build.BuildId)'
+  ACR.FullName: '$(ACR.Name).azurecr.io'
+
 pool:
   vmImage: 'Ubuntu-16.04'
 
@@ -23,7 +31,17 @@ steps:
     tasks: 'build'
 
 - task: Docker@1
-  displayName: 'Build an image'
-  inputs:
-    azureSubscriptionEndpoint: 'spring-boot-azure-pipline-demo'
-    azureContainerRegistry: springbootazurepiplinedemo.azurecr.io
+    displayName: 'Build an image'
+    inputs:
+      azureSubscriptionEndpoint: '$(Azure.ServiceConnectionId)'
+      azureContainerRegistry: '$(ACR.FullName)'
+      imageName: '$(ACR.ImageName)'
+      command: build
+
+  - task: Docker@1
+    displayName: 'Push an image'
+    inputs:
+      azureSubscriptionEndpoint: '$(Azure.ServiceConnectionId)'
+      azureContainerRegistry: '$(ACR.FullName)'
+      imageName: '$(ACR.ImageName)'
+      command: push
