@@ -16,7 +16,7 @@ jobs:
     displayName: Build
 
     pool:
-      name: 'pc977mbp'
+      vmImage: 'Ubuntu-16.04'
 
     steps:
       - task: Gradle@2
